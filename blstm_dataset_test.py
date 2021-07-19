@@ -12,7 +12,7 @@ CHORD_TYPE_NUM = 5
 class my_blstm_dataset(Dataset):
 
     def __init__(self, np_load_flag=False, debug=False,
-                 data_name_ls=['16_melody', '16_chord', '16_chord_type'], transform=None):
+                 data_name_ls=['16_melody_test', '16_chord_test', '16_chord_type_test'], transform=None):
 
         self.quantize_num = 16
         self.bar_num = 1
@@ -20,16 +20,17 @@ class my_blstm_dataset(Dataset):
         self.chord_data = None
         self.chord_type_data = None
         self.transform = transform
+        self.all_song_num = 218
 
         self.debug = debug
         if np_load_flag:
-            save_path = './datasets/'
+            save_path = './datasets/test/'
             self.melody_data, self.chord_data, self.chord_type_data = self.load_onehot_numpy()
             np.save(save_path + data_name_ls[0], self.melody_data)
             np.save(save_path + data_name_ls[1], self.chord_data)
             np.save(save_path + data_name_ls[2], self.chord_type_data)
         else:
-            load_data_path = './datasets/'
+            load_data_path = './datasets/test/'
             self.melody_data = np.load(
                 load_data_path + data_name_ls[0] + '.npy')
             self.chord_data = np.load(
@@ -45,12 +46,12 @@ class my_blstm_dataset(Dataset):
             print('chord_data\'s shape', self.chord_data.shape)
             print('chord_type_data\'s shape', self.chord_type_data.shape)
 
-    def load_onehot_numpy(self, sub_file_name=['onehot_train_melody', 'onehot_train_chord', 'onehot_train_chord_type']):
-        dataset_path = './onehot/'
+    def load_onehot_numpy(self, sub_file_name=['onehot_test_melody', 'onehot_test_chord', 'onehot_test_chord_type']):
+        dataset_path = './onehot/test/'
         melody = np.zeros(0)
         chord = np.zeros(0)
         chord_type = np.zeros(0)
-        for i in range(self.data_num):
+        for i in range(self.all_song_num):
             melody = np.append(melody, np.load(dataset_path +
                                                sub_file_name[0] + str(i) + '.npy'))
             chord = np.append(chord, np.load(dataset_path +
@@ -85,7 +86,7 @@ class my_blstm_dataset(Dataset):
 
 
 if __name__ == '__main__':
-    dataset = my_blstm_dataset(debug=True)
+    dataset = my_blstm_dataset(debug=True, np_load_flag=False)
     melody, chord, chord_type = dataset[0]
     print(len(dataset))
     print(melody.shape)

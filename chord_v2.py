@@ -1,6 +1,6 @@
 import torch
 from torch import mul, nn
-from blstm_dataset import my_blstm_dataset
+from blstm_dataset_train import my_blstm_dataset
 from numpy.core.numeric import NaN
 
 MELODY_CLASS_NUM = 14
